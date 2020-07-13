@@ -1,7 +1,10 @@
+import nltk
+nltk.download('wordnet')
 from nltk.corpus import wordnet as wn
 import numpy as np
 import math
 import csv
+from tqdm import tqdm
 
 # depth_max = max(max(len(hyp_path) for hyp_path in ss.hypernym_paths()) for ss in wn.all_synsets())
 depth_max = 20
@@ -130,7 +133,6 @@ def rank_array(a):
     ranks = order.argsort()
     return list(map(lambda x: float(x + 1), ranks))
 
-
 couples = get_lines('WordSim353.csv')
 wuAndPalmer = []
 shortestPath = []
@@ -142,7 +144,7 @@ t_leakcockChodorow = []
 
 target = []
 
-for c in couples:
+for c in tqdm(couples):
     wuAndPalmer.append(similarity(c[0], c[1], 1))
     shortestPath.append(similarity(c[0], c[1], 2))
     leakcockChodorow.append(similarity(c[0], c[1], 3))
@@ -163,8 +165,7 @@ print('----------------------------------------------------')
 
 print(f'# Spearmans rank correlation coefficient for Wu & Palmer: {spearmanCoefficient(target, wuAndPalmer)}, '
       f'target_nltk: {spearmanCoefficient(target, t_shortestPath)}')
-print(f'# Spearmans rank correlation coefficient for Leakcock & Chodorow: {spearmanCoefficient(target,
-                                                                                               leakcockChodorow)}, '
+print(f'# Spearmans rank correlation coefficient for Leakcock & Chodorow: {spearmanCoefficient(target, leakcockChodorow)}, '
       f'target_nltk: {spearmanCoefficient(target, t_leakcockChodorow)}')
 print(f'# Spearmans rank correlation coefficient for Shortest Path: {spearmanCoefficient(target, shortestPath)}, '
       f'target_nltk: {spearmanCoefficient(target, t_shortestPath)}')

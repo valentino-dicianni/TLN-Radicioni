@@ -7,5 +7,6 @@
     "test": "run"
   },
   "author": "Valentino Di Cianni",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {}
 }

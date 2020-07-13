@@ -1,19 +1,27 @@
+import nltk
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('semcor')
 from nltk.corpus import semcor
 from nltk.corpus import wordnet as wn
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+from nltk.tokenize import RegexpTokenizer
 import random
+from tqdm import tqdm
 
+tokenizer = RegexpTokenizer(r'\w+')
+stop_words = set(stopwords.words('english'))
 
 def lesk_algorithm(word, sentence):
     senses_list = wn.synsets(word)
     best_sense = senses_list[0]
     max_overlap = 0
-    context = sentence  # lista di parole
+    context = sentence  # list of words
     for sense in senses_list:
         signature = get_signature(sense)
         overlap = compute_overlap(signature, context)
-
         if overlap > max_overlap:
             max_overlap = overlap
             best_sense = sense
@@ -21,11 +29,10 @@ def lesk_algorithm(word, sentence):
 
 
 def get_signature(s):
-    stop_words = set(stopwords.words('english'))
     definition = s.definition()
     examples = ' '.join(s.examples())
     signature = definition + examples
-    word_tokens = word_tokenize(signature)
+    word_tokens = tokenizer.tokenize(signature)
     filtered_sentence = [w for w in word_tokens if not w in stop_words]
     return filtered_sentence
 
@@ -34,7 +41,7 @@ def compute_overlap(signature, context):
     overlap = 0
     for a_signature in signature:
         for a_context in context:
-            if a_signature == a_context:
+            if a_signature.lower() == a_context.lower():
                 overlap += 1
     return overlap
 
@@ -47,8 +54,10 @@ def get_sentence_file(path):
             line = line.replace('\n', "").replace('-', "").strip()
             if not line.startswith('#') and not line == '':
                 sp = line.split('**')
-                sentence = list(filter(None, (sp[0] + " " + sp[1] + " " + sp[2]).replace("  ", " ").split(" ")))
-                res.append((sp[1], sentence))
+                sentence  = ' '.join(sp)
+                token_sentence =  tokenizer.tokenize(sentence)
+                filtered_sentence = [w for w in token_sentence if not w in stop_words]
+                res.append((sp[1], filtered_sentence))
     return res
 
 
@@ -75,7 +84,6 @@ def get_random_word_brown():
                 if hasattr(synset, 'name'):
                     temp_buffer.append((synset.name(), lemma))
 
-        # cerca l'end of sentence (non sempre è il punto '.'TODO: fix it)
         s = sentences[i]
         eof = s[-1:]
         if lemma == eof:
