@@ -1,0 +1,16 @@
+{
+  "name": "es3",
+  "version": "1.0.0",
+  "description": "sense identification",
+  "main": "index.js",
+  "keywords": [
+    "tln",
+    "nltk"
+  ],
+  "author": "Valentino Di Cianni",
+  "license": "ISC",
+  "dependencies": {
+    "compute-cosine-similarity": "^1.0.0",
+    "sync-request": "^6.1.0"
+  }
+}

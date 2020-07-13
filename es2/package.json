@@ -1,0 +1,11 @@
+{
+  "name": "es2_radicioni",
+  "version": "1.0.0",
+  "description": "text summarization",
+  "main": "index.js",
+  "scripts": {
+    "test": "run"
+  },
+  "author": "Valentino Di Cianni",
+  "license": "ISC"
+}
