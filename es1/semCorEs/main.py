@@ -1,8 +1,4 @@
 import nltk
-nltk.download('wordnet')
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('semcor')
 from nltk.corpus import semcor
 from nltk.corpus import wordnet as wn
 from nltk.corpus import stopwords
@@ -10,9 +6,14 @@ from nltk.tokenize import word_tokenize
 from nltk.tokenize import RegexpTokenizer
 import random
 from tqdm import tqdm
+nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('semcor')
 
 tokenizer = RegexpTokenizer(r'\w+')
 stop_words = set(stopwords.words('english'))
+
 
 def lesk_algorithm(word, sentence):
     senses_list = wn.synsets(word)
@@ -54,9 +55,10 @@ def get_sentence_file(path):
             line = line.replace('\n', "").replace('-', "").strip()
             if not line.startswith('#') and not line == '':
                 sp = line.split('**')
-                sentence  = ' '.join(sp)
-                token_sentence =  tokenizer.tokenize(sentence)
-                filtered_sentence = [w for w in token_sentence if not w in stop_words]
+                sentence = ' '.join(sp)
+                token_sentence = tokenizer.tokenize(sentence)
+                filtered_sentence = [
+                    w for w in token_sentence if not w in stop_words]
                 res.append((sp[1], filtered_sentence))
     return res
 
@@ -112,7 +114,7 @@ for i, s in enumerate(sentences):
     if not s[0] == (' ', ' ') and i < 50:
         target = s[0][0]
         print(f'Sentence: {s[1]}')
-        res = lesk_algorithm(s[0][1],s_split)
+        res = lesk_algorithm(s[0][1], s_split)
         print(f'Best sense for **{s[0][1]}**: {res.definition()}')
         print(f'Target Sense: {target}, Find Sense: {res}')
         print('-------------------\n')

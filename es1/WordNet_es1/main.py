@@ -1,10 +1,10 @@
+from tqdm import tqdm
+import csv
+import math
+import numpy as np
+from nltk.corpus import wordnet as wn
 import nltk
 nltk.download('wordnet')
-from nltk.corpus import wordnet as wn
-import numpy as np
-import math
-import csv
-from tqdm import tqdm
 
 # depth_max = max(max(len(hyp_path) for hyp_path in ss.hypernym_paths()) for ss in wn.all_synsets())
 depth_max = 20
@@ -132,6 +132,7 @@ def rank_array(a):
     order = array.argsort()
     ranks = order.argsort()
     return list(map(lambda x: float(x + 1), ranks))
+
 
 couples = get_lines('WordSim353.csv')
 wuAndPalmer = []
