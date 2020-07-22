@@ -109,6 +109,7 @@ print("\n###########################\n\n")
 
 # PARTE 2
 sentences = get_random_word_brown()
+acc_score = 0
 for i, s in enumerate(sentences):
     s_split = s[1].split()
     if not s[0] == (' ', ' ') and i < 50:
@@ -116,5 +117,8 @@ for i, s in enumerate(sentences):
         print(f'Sentence: {s[1]}')
         res = lesk_algorithm(s[0][1], s_split)
         print(f'Best sense for **{s[0][1]}**: {res.definition()}')
-        print(f'Target Sense: {target}, Find Sense: {res}')
+        print(f'Target Sense: {target}, Find Sense: {res.name()}')
+        if target == res.name():
+            acc_score = acc_score + 1
         print('-------------------\n')
+print(f'SemCor Accuracy Results: {acc_score}/50')

@@ -20,7 +20,7 @@ def get_lines(path):
 
     return res
 
-
+# Map values between 0 and 10
 def map_range(value, min, max):
     return (value - min) / (max - min) * 10
 
