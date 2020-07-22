@@ -5,7 +5,7 @@ let textPath = "text_data_modified/Donald-Trump-vs-Barack-Obama-on-Nuclear-Weapo
 const fs = require('fs');
 const stopwords = getStopwords("resources/stopwords.txt");
 const nasari = parseNasari("resources/dd-small-nasari-15.txt");
-const compressionRate = 20;
+const compressionRate = 40;
 const precision = 10;
 let textToSummarize = getLines(textPath);
 
@@ -20,7 +20,7 @@ function summarizeText() {
         let context = createContext(precision);
         let score = getParagraphScore(context);
 
-        //    rerank using title
+        // rerank score using title words
         let rerankContext = textToSummarize[0].split(" ");
         let score2 = getParagraphScore(rerankContext);
         let sum = score.map((num, idx) => { return num + score2[idx]; });
@@ -29,12 +29,13 @@ function summarizeText() {
         let minIndex = sum.indexOf(minElem);
 
         textToSummarize.splice(minIndex, 1);
+        console.log("Iteration " + i + "...");
         i++;
         m = getTextLength();
     }
+    console.log("############ Results: ##############")
     console.log(textToSummarize);
     return textToSummarize;
-
 }
 
 function getParagraphScore(context) {
@@ -121,7 +122,7 @@ function weightedOverlap(v1, v2) {
     for (let i = 0; i < v1.length; i++) {
         for (let j = 0; j < v2.length; j++) {
             if (v1[i].word === v2[j].word) {
-                // numerator: rank(q,v1) + rank(q,v2) ^-1
+                // numerator: rank(q,v1) + rank(q,v2) ^-1 -> +2 perchè indice parte da 0
                 num += Math.pow(i + j + 2, -1);
                 overDim.push(v1[i].word);
             }
