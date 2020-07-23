@@ -46,7 +46,8 @@ function getParagraphScore(context) {
         let lineScore = 0;
         context.forEach(c => {
             words.forEach(w => {
-                lineScore += computeSimilarity(c, w);
+                if (!stopwords.includes(w.toLowerCase()))
+                    lineScore += computeSimilarity(c, w);
             });
         });
         score.push(lineScore);
